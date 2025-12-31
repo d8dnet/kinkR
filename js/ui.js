@@ -115,14 +115,18 @@ export function renderResults(box, scoreEl, data, t) {
     }
 
     box.appendChild(frag);
-  }
 
-  const labelMap = {
+    const labelMap = {
     "match": t("result.matchLabel"),
     "role": t("result.roleLabel"),
     "sync": t("result.syncLabel")
-};
-  const label = labelMap[it.kind] || "";
-  frag.querySelector(".res-title").textContent = `${it.title} ${label ? '(' + label + ')' : ''}`;
+    };
+      const label = labelMap[it.kind] || "";
+      frag.querySelector(".res-title").textContent = `${it.title} ${label ? '(' + label + ')' : ''}`;
+
+    
+  }
+
 
 }
+
