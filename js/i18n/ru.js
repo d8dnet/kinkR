@@ -44,7 +44,9 @@ export const ru = {
     roleLabel: "Дополнение",
     bothPrefix: "Оба: ",
     partner1Prefix: "Партнер: ",
-    partner2Prefix: "Вы: "
+    partner2Prefix: "Вы: ",
+    syncMatch: "Идеально!",
+    syncLabel: "Тандем",
   },
   share: {
     title: "Мой Sync Test",
@@ -66,4 +68,5 @@ export const ru = {
   }
 
 };
+
 
