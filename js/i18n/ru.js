@@ -1,7 +1,7 @@
 export const ru = {
-  appTitle: "Sync Test",
+  appTitle: "KinkR",
   home: {
-    title: "Sync Test",
+    title: "KinkR",
     subtitle: "Проверь совместимость\nв вопросах и ролях.",
     start: "Начать тест",
     enterCode: "Ввести код",
@@ -66,3 +66,4 @@ export const ru = {
   }
 
 };
+
