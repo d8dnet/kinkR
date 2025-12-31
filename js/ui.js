@@ -81,9 +81,11 @@ export function animateSkip(wrap, onDone) {
 export function renderResults(box, scoreEl, data, t) {
   clear(box);
 
-  if (data.items.length === 0) {
+  // 1. Обработка пустого результата
+  if (!data.items || data.items.length === 0) {
     const emptyTpl = document.getElementById("tpl-empty-result");
     if (!emptyTpl) throw new Error("Missing <template id='tpl-empty-result'>");
+    
     const frag = emptyTpl.content.cloneNode(true);
     frag.querySelector(".res-empty").textContent = t("result.empty");
     box.appendChild(frag);
@@ -92,41 +94,52 @@ export function renderResults(box, scoreEl, data, t) {
     return;
   }
 
+  // 2. Заголовок результатов
   scoreEl.textContent = t("result.intro");
 
   const itemTpl = document.getElementById("tpl-result-item");
   const badgeTpl = document.getElementById("tpl-badge");
-  if (!itemTpl) throw new Error("Missing <template id='tpl-result-item'>");
-  if (!badgeTpl) throw new Error("Missing <template id='tpl-badge'>");
+  
+  if (!itemTpl || !badgeTpl) {
+    throw new Error("Missing result templates");
+  }
 
+  // Карта меток для разных типов совпадений
+  const labelMap = {
+    "match": t("result.matchLabel"), // Обоюдное "Да"
+    "role": t("result.roleLabel"),   // Разные роли (старая логика)
+    "sync": t("result.syncLabel")    // Тандем (Давать + Получать)
+  };
+
+  // 3. Основной цикл рендеринга
   for (const it of data.items) {
     const frag = itemTpl.content.cloneNode(true);
 
-    const label = it.kind === "match" ? t("result.matchLabel") : t("result.roleLabel");
-    frag.querySelector(".res-title").textContent = `${it.title} (${label})`;
+    // Устанавливаем заголовок карточки результата
+    const label = labelMap[it.kind] || "";
+    const displayTitle = label ? `${it.title} (${label})` : it.title;
+    frag.querySelector(".res-title").textContent = displayTitle;
 
+    // Контейнер для бейджей
     const badgeBox = frag.querySelector(".badge-container");
+    
     for (const b of it.badges) {
       const bFrag = badgeTpl.content.cloneNode(true);
       const badge = bFrag.querySelector(".badge");
+      
+      // Установка стиля и текста бейджа
       badge.style.background = b.col;
-      badge.textContent = t(b.textKey) + b.value;
+      
+      // Склеиваем перевод префикса и значение (если оно есть)
+      const prefix = t(b.textKey);
+      badge.textContent = b.value ? `${prefix} ${b.value}` : prefix;
+      
       badgeBox.appendChild(bFrag);
     }
 
+    // Добавляем готовую карточку в DOM
     box.appendChild(frag);
-
-    const labelMap = {
-    "match": t("result.matchLabel"),
-    "role": t("result.roleLabel"),
-    "sync": t("result.syncLabel")
-    };
-      const label = labelMap[it.kind] || "";
-      frag.querySelector(".res-title").textContent = `${it.title} ${label ? '(' + label + ')' : ''}`;
-
-    
   }
-
-
 }
+
 
